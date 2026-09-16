@@ -12,9 +12,9 @@ def train_logistic_regression(X: np.ndarray, y: np.ndarray, lr: float = 0.1, ste
     """
     # Write code here
     N, D = X.shape
-    w = np.zeros(D)
+    w = np.zeros(D, dtype=float)
     b = 0.0
-    while steps:
+    for _ in range(steps):
         logits = X @ w + b
         preds = _sigmoid(logits)
         grad_w = X.T @ (preds - y) / N
@@ -22,7 +22,5 @@ def train_logistic_regression(X: np.ndarray, y: np.ndarray, lr: float = 0.1, ste
 
         w -= grad_w * lr
         b -= grad_b * lr
-
-        steps -= 1
 
     return w, b
