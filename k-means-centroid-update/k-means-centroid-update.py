@@ -8,7 +8,7 @@ def k_means_centroid_update(points: list, assignments: list, k: int) -> list:
     d = len(points[0])
     points = np.asarray(points, dtype = float)
     assignments = np.asarray(assignments, dtype = int)
-    output = [d * [0] for _ in range(k)]
+    output = [d * [0.0] for _ in range(k)]
     for i in range(k):
         mask = (assignments == i)
         if mask.any():
