@@ -1,26 +1,19 @@
-import math
+import numpy as np
 
-def gain(x):
-    return 2 ** x - 1
+def dcg_at_k(relevance_scores, k):
+    relevance_scores = np.asarray(relevance_scores[:k])
+    if relevance_scores.size == 0:
+        return 0.0
+
+    discounts = np.log2(np.arange(2, 2 + relevance_scores.size))
+    return float(np.sum((2 ** relevance_scores - 1) / discounts))
 
 def ndcg(relevance_scores: list, k: int) -> float:
     """
     Returns NDCG as a float.
     """
-    # 1. 计算实际截断到 k 的 DCG
-    k_scores = relevance_scores[:k]
-    dcg = 0
-    for index, score in enumerate(k_scores):
-        dcg += gain(score) / math.log(index + 2, 2)
+    # Write code here
+    dcg = dcg_at_k(relevance_scores, k)
+    idcg = dcg_at_k(np.sort(relevance_scores)[::-1], k)
 
-    # 2. 计算 IDCG：对完整列表降序排序，再取前 k 个
-    ideal_scores = sorted(relevance_scores, reverse=True)[:k]
-    idcg = 0
-    for index, score in enumerate(ideal_scores):
-        idcg += gain(score) / math.log(index + 2, 2)
-
-    # 3. 避免全 0 时分母为 0
-    if idcg == 0:
-        return 0.0
-
-    return float(dcg / idcg)
+    return dcg / idcg if idcg > 0 else 0.0
